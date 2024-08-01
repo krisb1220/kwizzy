@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{title}}</title>
 
-  {{!-- <!-- Import the webpage's stylesheet -->
-  <link rel="stylesheet" href="/style.css" type="text/css" /> --}}
+   <!-- Import the webpage's stylesheet -->
+  <link rel="stylesheet" href="http://localhost:3000/style.css" type="text/css" /> 
 </head>
 
 <body>
@@ -17,7 +17,7 @@
     aside from hashing the password on the server. <br> This system will eventually be used in a full stack project, Kwizzy. 
     It is planned on being a drag/drop/WYSIWYG quiz/form builder.
   </p>
-  <form class="color-search" method="post" action="/signup" id="signup">
+  <form class="authentication" method="post" action="/signup" id="signup">
     <h1 id="result">Login or sign up</h1>
     Credentials:
     <input id="email" name="email" placeholder="krisb1220@gmail.com" required="required" type="email" />
@@ -25,16 +25,103 @@
 
     <button type="submit" id="sub">Submit</button>
   </form>
-  <input type="checkbox" id="login-type" />Login not signup?
+  <input type="checkbox" id="login-type" />Signup not login?
 
+  <main>
+    <div class="container grid kit">
+      <button class="item kit-tool" draggable="true"><p class="label">Radio</p></button>
+      <button class="item kit-tool" draggable="true"><p class="label">Checkbox</p></button>
+      <button class="item kit-tool" draggable="true"><p class="label">Text</p></button>
+      <button class="item kit-tool" draggable="true"><p class="label">Multiple Choice</p></button>
+      <button class="item kit-tool" draggable="true"><p class="label">Checkboxes</p></button>
+      <button class="item kit-tool" draggable="true"><p class="label">Linear scale</p></button>
+    </div>
 
-  <div id="attributions">
-    <p class="name">Created by Kris Baillargeon</p>
-    <a href="https://github.com/krisb1220" class="github">Visit me on Github</a>
-  </div>
-
-
+    <div class="container main-area"></div>
+  </main>
 </body>
+
+
+
+<style>
+  div {
+  margin: 0em;
+  padding: 2em;
+}
+
+#source {
+  color: blue;
+  border: 1px solid black;
+}
+
+#target {
+  border: 1px solid black;
+}
+</style>
+
+<div>
+  <p id="source" ondragstart="dragstart_handler(event);" draggable="true">
+    Select this element, drag it to the Drop Zone and then release the selection
+    to move the element.
+  </p>
+</div>
+
+<div
+  id="target"
+  ondrop="drop_handler(event);"
+  ondragover="dragover_handler(event);">
+  Drop Zone
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+  function dragstart_handler(ev) {
+  console.log(
+    `dragStart: dropEffect = ${ev.dataTransfer.dropEffect} ; effectAllowed = ${ev.dataTransfer.effectAllowed}`,
+  );
+
+  // Add this element's id to the drag payload so the drop handler will
+  // know which element to add to its tree
+  ev.dataTransfer.setData("text", ev.target.id);
+  ev.dataTransfer.effectAllowed = "move";
+}
+
+function drop_handler(ev) {
+  console.log(
+    `drop: dropEffect = ${ev.dataTransfer.dropEffect} ; effectAllowed = ${ev.dataTransfer.effectAllowed}`,
+  );
+  ev.preventDefault();
+
+  // Get the id of the target and add the moved element to the target's DOM
+  const data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
+function dragover_handler(ev) {
+  console.log(
+    `dragOver: dropEffect = ${ev.dataTransfer.dropEffect} ; effectAllowed = ${ev.dataTransfer.effectAllowed}`,
+  );
+  ev.preventDefault();
+  // Set the dropEffect to move
+  ev.dataTransfer.dropEffect = "move";
+}
+</script>
+
+
+
+
+
+
+
+
+
 <script>
   let formData = new FormData(document.forms.signup)
 
@@ -45,7 +132,7 @@
   document.querySelector("#signup").addEventListener("submit", (e) => {
     e.preventDefault();
     let isChecked = document.querySelector("#login-type").checked
-    let url = document.querySelector("#login-type").checked ? "/login" : "/signup";
+    let url = !document.querySelector("#login-type").checked ? "/login" : "/signup";
     data = {
       email: formData.get("email"),
       password: formData.get("password")
@@ -69,3 +156,10 @@
 </script>
 
 </html>
+
+
+  <div id="attributions">
+    <p class="name">Created by Kris Baillargeon</p>
+    <a href="https://github.com/krisb1220" class="github">Visit me on Github</a>
+  </div>
+

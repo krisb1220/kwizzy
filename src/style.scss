@@ -1,0 +1,71 @@
+@import '_colors';
+
+h1 { 
+    color: $violet-dark;
+ }
+
+
+ .container {
+    // display: flex;
+    justify-content: space-around;
+    background: $red-solid;
+    height: 50vh;
+    padding: 15px;
+    flex-basis: auto;
+    margin: 10px
+ }
+
+
+ .container.grid { 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+ }
+ 
+
+ .kit { 
+    width: 33%;
+ }
+
+
+ 
+ .main-area {
+    width: 60%;
+    height: auto;
+    background: darken($color: lightblue, $amount: 30)
+ }
+
+ main { 
+    display: flex;
+    margin: 0;
+ }
+
+ .kit-tool {
+    // height: 50px;
+    background: darken($color: rgba(173, 216, 230, 0.259), $amount: 10);
+    border:  3px solid black;
+    margin: 3px;
+    // text-align: center;
+    // margin: auto;
+    // margin: 2px;
+    display: flex;
+ }
+
+ .kit-tool > .label {
+    margin: auto;
+ }
+
+ #builder > input  {
+   border: 1px solid black;
+ }
+
+ #builder {
+   max-height: 50vh;
+   overflow-y: scroll;
+ }
+
+ .input-label { 
+   color: #333;
+   width: auto;
+   margin: 10px;
+ }

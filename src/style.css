@@ -1,0 +1,61 @@
+h1 {
+  color: #4a148c;
+}
+
+.container {
+  justify-content: space-around;
+  background: #f44336;
+  height: 50vh;
+  padding: 15px;
+  flex-basis: auto;
+  margin: 10px;
+}
+
+.container.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.kit {
+  width: 33%;
+}
+
+.main-area {
+  width: 60%;
+  height: auto;
+  background: #3a9fc0;
+}
+
+main {
+  display: flex;
+  margin: 0;
+}
+
+.kit-tool {
+  background: rgba(134, 197, 218, 0.259);
+  border: 3px solid black;
+  margin: 3px;
+  display: flex;
+}
+
+.kit-tool > .label {
+  margin: auto;
+}
+
+#builder > input {
+  border: 1px solid black;
+}
+
+#builder {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+.input-label {
+  color: #333;
+  width: auto;
+  margin: 10px;
+}
+
+/*# sourceMappingURL=style.css.map */

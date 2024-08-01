@@ -6,6 +6,8 @@ This is going to be a simple WYSIWYG quiz/form builder app. It will have:
 ## TODO
 + Create more intutitive & practical database schema
 + Unit tests because retyping the same stuff for testing is getting on my nerves 
++ Add API key for database so that this can be used publicly without MongoDB Atlas getting upset with me
++ Add caching / sessions
 + Everything else
 
 ## Short-term goals:
@@ -15,10 +17,12 @@ This is going to be a simple WYSIWYG quiz/form builder app. It will have:
 + "News feed" 
 + "Profile" page
 + Ability to submit forms 
++ Ability to view form submissions
 
 ## Goals
 + Convert frontend to React
 + Ensure proper security 
++ Custom colors?
 
 ## Current state
 There are currently 3 endpoints -
@@ -26,6 +30,4 @@ There are currently 3 endpoints -
 + `POST /SIGNUP`
 + `POST /LOGIN`
 
-MongoDB instance on Atlas (
-
-)
+MongoDB instance on Atlas 

@@ -11,9 +11,11 @@ var UserModel = require("./models/User").User;
 var jsonParser = bodyParser.json() 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const uri = process.env.MONGOOSE_URI;
+const cors = require('cors');
+var session = require('express-session')
+console.log("Starting server.........")
 
 //setters
-console.log(UserModel.create())
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
@@ -28,14 +30,17 @@ app.use((req, res, next)=>{
   next();
 })
 
+app.use(session({secret : "Stays my secret"}));
 
+app.use(express.static(__dirname + "/src"));
+app.use(cors());
 //db
 mongoose.set("strictQuery", false);
 main().catch((err) => console.log(err));
 
 async function main() {
   console.log("mongoose connected");
-  await mongoose.connect(process.env.MONGOOSE_URI);
+  await mongoose.connect(process.env.MONGOOSE_URI);//tsdddd
 }
 
 
@@ -43,6 +48,9 @@ async function main() {
 //routes
 app.get('/', async (req, res) => {
   // const um = new UserModel({email:"k120", "password": "ddd", entries:[]})
+  console.log("----session-----")
+  console.log(session.cookie)
+  console.log("----------------")
   res.render('index', {title:"Basic Authentication REST API"}); 
 });
 
@@ -87,7 +95,6 @@ app.post("/login", async (req, res)=>{
       });
 
     } 
-
   })
 });
 
