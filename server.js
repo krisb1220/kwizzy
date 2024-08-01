@@ -82,7 +82,7 @@ app.post("/login", async (req, res)=>{
             let user = await UserModel.findOne({email: req.body.email});
             bcrypt.compare(req.body.password, user.password, function(err, result) {
               console.log("password: " + req.body.password);
-              console.log("password hash: " + user.password); //$2b$09$cUggMpQl4BaLmpXY8Pnt1OU3rFI/5A943d2QgmSIIQ9R9p62x9ate
+              console.log("password hash: " + user.password);
               console.log("password hashed: " + hash);
               console.log(result);
               if(result){
