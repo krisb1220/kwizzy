@@ -26,7 +26,7 @@
     <button type="submit" id="sub">Submit</button>
   </form>
   <input type="checkbox" id="login-type" />Signup not login?
-
+  <div id="menu"></div>
   <main>
     <div class="container grid kit">
       <button class="item kit-tool" id="rad" data-tooltype="radio" draggable="true"><p class="label">Radio</p></button>
@@ -38,19 +38,24 @@
         <form id="builder">
             form
         </form>
+        <button type="submit" id="save-kwizzy">Save Kwizzy</button>
     </div>
   </main>
 </body>
 
 
-<script id="button-logic">
-
-
+<script>
     let global = {
         num_elements: 0,
-        elements:[]
+        elements:[],
+        saved: true,
+        userData: {},
+        isLoggedIn: false
     }
+</script>
 
+
+<script id="builder-logic">
     console.log("new")
     let kitButtons = document.querySelectorAll(".kit-tool");
     console.log(kitButtons);
@@ -84,21 +89,44 @@
             global.elements.push(containerElement);
             // containerElement.appendChild(inputElement);
 
-
+            global.saved = false;
             document.querySelector("#builder").appendChild(containerElement);
 
         })
     })
 
+</script>
 
+
+<script id="save-kwizzy">
+    document.querySelector("#save-kwizzy").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (!global.saved && global.isLoggedIn) {
+            const data = document.querySelector("#builder").innerHTML;
+            global.saved = true;
+            console.log("save");
+            fetch("http://localhost:3000/entries?action=new", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postBody: data, title: "A kwizzy made at " + Date.now(), email:global.userData.email})
+            })
+                .then(response => {
+                    console.log(response.status);
+                    return response;
+                })
+                .then(response => response.json())
+                .then((body) => {
+                    console.log("Kwizzy saved!");
+                });
+        } else {
+            alert("Kwizzy already saved!");
+        }
+    });
 </script>
 
 
 
-
-
-
-<script id="submit-form">
+<script id="login-form">
     let formData = new FormData(document.forms.signup)
   
     document.querySelector("#signup").addEventListener("change", (e) => {
@@ -126,14 +154,25 @@
         .then(response => response.json())
         .then((body) => {
             document.querySelector("#result").innerText = body.message;
-            
-            if(body.success && isChecked) {
-              setCookie("user", body.user)
-            }
-  
-            if(getCookie("user")){
-              console.log("already signed in")
-            }
+            global.userData = body._doc;
+            console.log(global.userData);
+            global.isLoggedIn = true;
+            let kwizzyList = document.createElement("select");
+            kwizzyList.setAttribute("id", "kwizzy-list")
+            global.userData.entries.forEach((entry)=>{
+                let entrySelection = document.createElement("option")
+                entrySelection.setAttribute("value", entry._id)
+                entrySelection.innerText = entry.title;
+                kwizzyList.appendChild(entrySelection);
+            });
+
+            // document.getElementById("kwizzy-list").addEventListener("onchange", (e)=>{
+            //     console.log("kwizzy selected")
+            //     console.log(e);
+            // })
+
+            console.log(kwizzyList)
+            document.getElementById("menu").appendChild(kwizzyList);
         })
     });
   </script>

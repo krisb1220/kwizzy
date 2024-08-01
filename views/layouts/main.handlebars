@@ -13,7 +13,7 @@
 
 <body>
   <h1>{{title}}</h1>
-  <p>This is an example of a basic authentication REST API. There have been no security considerations
+  <p>This izzzzzzssssssssssssszzzzzz an example of a basic authentication REST API. There have been no security considerations
     aside from hashing the password on the server. <br> This system will eventually be used in a full stack project, Kwizzy. 
     It is planned on being a drag/drop/WYSIWYG quiz/form builder.
   </p>
@@ -72,14 +72,6 @@
   ondragover="dragover_handler(event);">
   Drop Zone
 </div>
-
-
-
-
-
-
-
-
 
 <script>
   function dragstart_handler(ev) {
@@ -152,6 +144,34 @@ function dragover_handler(ev) {
           }
       })
   });
+
+</script>
+
+<script>
+
+let loops = 0;
+let page;
+
+function fetchPeriodically() {
+  setTimeout(() => {
+    fetch("/has-server-restarted")
+      .then((res) => {
+        return res.json();
+      }).then((data)=>{
+        if(data.result == true) {
+          console.log("true");
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching:", err);
+      });
+
+    fetchPeriodically();
+  }, 500);
+}
+
+fetchPeriodically();
 
 </script>
 

@@ -2,14 +2,22 @@
 
 This is going to be a simple full-stack WYSIWYG quiz/form builder app. Will eventually be converted to React/Typescript, but that is not currently the priority. 
 
-# Commit 2
+# Commit 4
++ Added `POST /entries` endpoint. Either returns all posts or adds a new post and returns all posts.
++ User data will be shared with front-end on login now. 
++ User can see a list of the kwizzys they have created
++ User can save a kwizzy
++ User data is temporarily stored in the DOM to allow functionalities. Will eventually make it as a cookie.
++ Next: Sessions
+
+# Commit 2/3ish
 Added significant front end functionality as well as some improvements to the way authentication and static files are  handled. 
 
 NOTE: All front end work has instead been completed on the newly added "index.html" file to allow for live server / hot module reloading. I'm sure there's a better way I just don't know it. 
  
 + Added some WYSIWYG functionality. The homepage now has a small toolbar and form staging area that has simple input elements added through button presses.
 + Added "message" to response from `/signup` and `/login` that explains the result
-+ Basic Post model created
++ Basic `Post` model created
 + Added `static` middleware
 + added `cors` middleware
 
@@ -22,6 +30,7 @@ NOTE: All front end work has instead been completed on the newly added "index.ht
 + Add API key for database so that this can be used publicly without MongoDB Atlas getting upset with me
 + Add caching / sessions
 + Everything else
++ Remove glitch files?? maybe?? 
 
 ## Short-term goals:
 + Login & Auth
