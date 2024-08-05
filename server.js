@@ -15,8 +15,13 @@ const uri = process.env.MONGOOSE_URI;
 const cors = require('cors');
 var session = require('express-session');
 const { Post } = require('./models/Post');
-let currentPage = ''
 let requestsMade = 0;
+const livereload = require('livereload');
+const connectLivereload = require('connect-livereload');
+const cookieParser = require("cookie-parser");
+const passport = require("passport").passport;
+
+
 
 class StatusMessage {
   constructor(errorCode=0, message="complete") {
@@ -64,19 +69,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(jsonParser); 
 app.use(urlencodedParser); 
 
-app.use((req, res, next)=>{
-  console.log(`${req.method} ${req.url}`);
-  console.log("Request Body:");
-  console.log("Request #" + requestsMade);
-  console.log(req.body);
-  requestsMade++
-  next();
-})
-
-app.use(session({secret : "Stays my secret"}));
 
 app.use(express.static(__dirname + "/src"));
 app.use(cors());
+app.use(connectLivereload());
+
 
 //db
 mongoose.set("strictQuery", false);
@@ -84,43 +81,67 @@ main().catch((err) => console.log(err));
 
 async function main() {
   console.log("mongoose connected");
-  await mongoose.connect(process.env.MONGOOSE_URI);//tsdddd
+  await mongoose.connect(process.env.MONGOOSE_URI);
 }
 
 
 
+app.use((req, res, next)=>{
+  console.log(`${req.method} ${req.url}`);
+  // console.log(req.session)
+  console.log("Request Body:");
+  console.log("Request #" + requestsMade);
+  console.log(req.body);
+  requestsMade++
+  next();
+})
+
+const liveReloadServer = livereload.createServer();
+
+// Watch the 'public' and 'views' directories for changes
+liveReloadServer.watch(path.join(__dirname, 'src'));
+liveReloadServer.watch(path.join(__dirname, 'views'));
+
+//session
+
+app.use(cookieParser("helloworld"))
+app.use(session({
+  secret: "12",
+  saveUninitialized: false,
+  resave: false,
+  cookie: {
+    maxAge: 60000 * 60
+  }
+}));
+
+
+app.get('/ses', async (req, res) => {
+  // const um = new UserModel({email:"k120", "password": "ddd", entries:[]})
+  console.log("----session-----")
+  // console.log(req.headers.cookie)
+  console.log(req.session.id)
+  // console.log(session)
+  console.log("----------------")
+  req.session.visited = true;
+  res.json(session)
+});
 
 //routes
 app.get('/', async (req, res) => {
   // const um = new UserModel({email:"k120", "password": "ddd", entries:[]})
   console.log("----session-----")
-  console.log(session.cookie)
+  // console.log(req.headers.cookie)
+  console.log(req.session.id)
   console.log("----------------")
+  req.session.visited = true;
   res.render('index', {title:"Basic Authentication REST API"}); 
-});
-
-app.get('/has-server-restarted', async (req, res) => {
-  const fs = require('node:fs');
-  fs.readFile('views/layouts/main.handlebars', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  if (currentPage != data) {
-    console.log("file changed");
-    currentPage = data;
-    res.json({result:true})
-  } else {
-    res.send({result:false});
-  }
-  });
 });
 
 app.post("/signup", async (req, res)=>{
   UserModel.findOne({email: req.body.email}).then((data)=>{
     if(data){
       console.log("user exists");
-      res.json(new StatusMessage(2))
+      res.status(401).json(new StatusMessage(2))
     } else {
       bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(req.body.password, 10, async function(err, hash) {
@@ -129,7 +150,7 @@ app.post("/signup", async (req, res)=>{
 
         });
       });
-      res.json(new StatusMessage(0, "User created. Yoy may now log in." ));
+      res.json(new StatusMessage(0, "User created. You may now log in." ));
 
       // res.json({"success": 1, message:"User created. You may now log in."})
     }
@@ -148,16 +169,18 @@ app.post("/login", async (req, res)=>{
               console.log("password hashed: " + hash);
               console.log(result);
               if(result){
+                //don't return password 
+                req.session.user = user;
                 res.json({...user, success:1, message:"Login Successful"});
               } else {
-                res.json({"success": -1, message:"Login failed"})
+                return res.status(401).json({"success": -1, message:"Login failed"})
               }
           });
         });
       });
 
     } else {
-      res.json({"success": -1, message:"User does not exist"})
+      res.status(401).json({"success": -1, message:"User does not exist"})
     }
   })
 });
@@ -189,12 +212,34 @@ app.post("/entries", async (req, res)=>{
     } 
   } 
 
+  if(req.query.action == "save") {
+    if (user) {
+      user.entries.push(new PostModel({
+        title: reqBody.title,
+        body: reqBody.postBody
+      }));
+      user.save();
+    } 
+  } 
+
 
   res.send(payload);
 
 });
 
+
+app.get("/status", (request, response)=>{
+  console.log(request.sessionStore)
+  response.send(request.session.user || "not authenticated")
+})
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
+});
+
+liveReloadServer.server.once('connection', () => {
+  setTimeout(() => {
+    liveReloadServer.refresh('/');
+  }, 100);
 });

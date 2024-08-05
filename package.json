@@ -12,14 +12,19 @@
     "body-parser": "^1.20.2",
     "chai": "^3.5.0",
     "chai-webdriver": "^1.2.3",
+    "connect-livereload": "^0.6.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.3",
     "express-session": "^1.18.0",
     "handlebars": "^4.7.8",
+    "livereload": "^0.9.3",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.5.2"
+    "mongoose": "^8.5.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
   },
   "engines": {
     "node": "16.x"

@@ -1,58 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    
-    <!-- 
-      This is the main Handlebars template for the site 
-      - When the user visits the homepage or submits a color the app calls the endpoints in server.js
-      - The server script passes data in here and the Handlebars code builds it into the HTML page
-    -->
-    
-    <meta charset="utf-8" />
-    <link rel="icon" href="https://glitch.com/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>{{seo.title}}</title>
-    
-    <!-- Meta tags for SEO and social sharing -->
-    <link rel="canonical" href="{{seo.url}}">
-    <meta name="description" content="{{seo.description}}">
-    <meta property="og:title" content="{{seo.title}}">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="{{seo.url}}">
-    <meta property="og:description" content="{{seo.description}}">
-    <meta property="og:image" content="{{seo.image}}">
-    <meta name="twitter:card" content="summary">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kwizzy!!</title>
 
-    <!-- Import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css" />
+   <!-- Import the webpage's stylesheet -->
+  <link rel="stylesheet" href="/style.css" type="text/css" /> 
+</head>
 
-    <!-- This is a handlebars IF statement
-         Checking for a custom "color" parameter from server.js -->
-    {{#if color}} 
-    <!-- If there is a color value, update the style for the page title -->
-    <style>
-      .title {
-        color: {{color}};
-      }
-    </style>
-    {{/if}}    
-  </head>
-  <body>
-  <form class="color-search" method="post">
-              <label for="color">
-                
-                <!-- We use the handlebars "#if" statement so the form can adapt to its situation -->
-                {{#if color}}
-                  Try another color?<br>
-                {{else}}
-                  What's your favorite color?<br>
-                {{/if}}
-                <input id="color" name="color" required="required" type="text">
-              </label>
-            
-            <!-- If the user submits a value through the form 
-                 it'll be passed to the server in the request body  -->
-            <button type="submit">Submit</button>
-          </form>
+<body>
+
+    <img src="https://techbykris.com/wp-content/uploads/2024/08/kwizzy-logo.png" width="250px"/>
+  <h1> Kwizzy by Krissy</h1>
+  <p>This is an example of a basic authentication REST API. There have been no security considerations
+    aside from hashing the password on the server. <br> This system will eventually be used in a full stack project, Kwizzy. 
+    It is planned on being a drag/drop/WYSIWYG quiz/form builder.
+  </p>
+  <form class="authentication" method="post" action="/signup" id="signup">
+    <h1 id="result">Login or sign up</h1>
+    Credentials:
+    <input id="email" name="email" placeholder="krisb1220@gmail.com" required="required" type="email" value="krisb1220@gmail.com"> 
+    <input id="password" name="password" placeholder="password" required="required" type="password" value="c"/>
+    <input type="checkbox" id="login-type" />Signup?
+    <button type="submit" id="sub">Login</button>
+  </form>
+
+  <div id="menu"></div>
+  <main>
+    <div class="container grid kit">
+      <button class="item kit-tool" id="rad" data-tooltype="radio" draggable="true"><p class="label">Radio</p></button>
+      <button class="item kit-tool" data-tooltype="checkbox" draggable="true"><p class="label">Checkbox</p></button>
+      <button class="item kit-tool" data-tooltype="textarea" draggable="true"><p class="label">Text</p></button>
+    </div>
+
+    <div class="container main-area">
+        <form id="builder">
+            <input id="kwizzy-title" type="text" value="Create a new Kwizzy....." contenteditable="true">
+            form
+        </form>
+        <button type="submit" id="save-kwizzy">Save Kwizzy</button>
+    </div>
+  </main>
+</body>
+<script src="/index.js"></script>
+
 </html>
+
+

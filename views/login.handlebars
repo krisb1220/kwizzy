@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kwizzy Login</title>
+
+   <!-- Import the webpage's stylesheet -->
+  <link rel="stylesheet" href="src/style.css" type="text/css" /> 
+</head>
+
+<body>
+    <img src="https://techbykris.com/wp-content/uploads/2024/08/kwizzy-logo.png" width="250px"/>
+  <h1> Login </h1>
+  <form class="authentication" method="post" action="/signup" id="signup">
+    <h1 id="result">Login or sign up</h1>
+    Credentials:
+    <input id="email" name="email" placeholder="krisb1220@gmail.com" required="required" type="email" value="krisb1220@gmail.com"> 
+    <input id="password" name="password" placeholder="password" required="required" type="password" value="c"/>
+    <input type="checkbox" id="login-type" />Signup?
+    <button type="submit" id="sub">Login</button>
+  </form>
+</body>
+<script src="/index.js"></script>
+
+</html>
+
+

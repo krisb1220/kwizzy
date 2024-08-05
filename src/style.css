@@ -2,6 +2,23 @@ h1 {
   color: #4a148c;
 }
 
+.authentication {
+  display: block;
+  background: #90caf9;
+  width: 50%;
+  padding: 50px;
+  margin: auto;
+  border-radius: 10px;
+}
+
+#kwizzy-title {
+  background: transparent;
+  border: none !important;
+  outline: none;
+  display: block;
+  font-size: 35px;
+}
+
 .container {
   justify-content: space-around;
   background: #f44336;
@@ -19,6 +36,7 @@ h1 {
 
 .kit {
   width: 33%;
+  background-color: rgb(98, 253, 100);
 }
 
 .main-area {
@@ -52,10 +70,19 @@ main {
   overflow-y: scroll;
 }
 
-.input-label {
+.inner-input {
   color: #333;
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0px;
+}
+.inner-input .input-label {
   width: auto;
-  margin: 10px;
+  margin: 0px 30px 0px 0px;
+}
+.inner-input .input-label.checkbox, .inner-input .input-label.radio {
+  display: inline-flex;
+  order: 2;
 }
 
 /*# sourceMappingURL=style.css.map */

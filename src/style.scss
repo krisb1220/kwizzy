@@ -2,8 +2,26 @@
 
 h1 { 
     color: $violet-dark;
+   //  color: red;
+}
+
+ .authentication {
+   display: block;
+   background: $blue-light;
+   width: 50%;
+   padding: 50px;
+   margin: auto;
+   border-radius: 10px;
  }
 
+
+#kwizzy-title {
+   background: transparent;
+   border: none !important;
+   outline: none;
+   display: block;
+   font-size: 35px;
+}
 
  .container {
     // display: flex;
@@ -25,6 +43,7 @@ h1 {
 
  .kit { 
     width: 33%;
+    background-color: rgb(98,253,100);
  }
 
 
@@ -64,8 +83,20 @@ h1 {
    overflow-y: scroll;
  }
 
- .input-label { 
+.inner-input {
    color: #333;
-   width: auto;
-   margin: 10px;
- }
+   display: flex;
+   flex-direction: row;;
+   margin: 10px 0px;
+
+   .input-label { 
+      width: auto;
+      margin: 0px 30px 0px 0px;
+    }
+
+    .input-label.checkbox, .input-label.radio{
+      display: inline-flex;
+      order: 2;
+    }
+   
+}

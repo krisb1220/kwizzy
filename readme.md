@@ -2,6 +2,10 @@
 
 This is going to be a simple full-stack WYSIWYG quiz/form builder app. Will eventually be converted to React/Typescript, but that is not currently the priority. 
 
+
+# Commit 4
++ Saving a version that mostly works before I start messing with the sessions and routes
+
 # Commit 4
 + Added `POST /entries` endpoint. Either returns all posts or adds a new post and returns all posts.
 + User data will be shared with front-end on login now. 
