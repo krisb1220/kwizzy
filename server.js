@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const http = require("http")
 const port = 3000;
 const bcrypt =require("bcrypt");
 const dotenv = require('dotenv').config();
@@ -7,21 +8,21 @@ const { engine } = require('express-handlebars');
 const path = require('path');
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser')
-const UserModel = require("./models/User").User;
-const PostModel = require("./models/Post").Post; 
+const UserModel = require("./src/models/User").User;
+const PostModel = require("./src/models/Post").Post; 
 const jsonParser = bodyParser.json() 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const uri = process.env.MONGOOSE_URI;
 const cors = require('cors');
 var session = require('express-session');
-const { Post } = require('./models/Post');
+const { Post } = require('./src/models/Post');
 let requestsMade = 0;
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 const cookieParser = require("cookie-parser");
-const passport = require("passport").passport;
-
-
+const passport = require("passport");
+const localStrategy = require("./src/strategies/local-strategy")
+const debug = false;
 
 class StatusMessage {
   constructor(errorCode=0, message="complete") {
@@ -87,12 +88,14 @@ async function main() {
 
 
 app.use((req, res, next)=>{
-  console.log(`${req.method} ${req.url}`);
-  // console.log(req.session)
-  console.log("Request Body:");
-  console.log("Request #" + requestsMade);
-  console.log(req.body);
-  requestsMade++
+  if(debug) {
+    console.log(`${req.method} ${req.url}`);
+    // console.log(req.session)
+    console.log("Request Body:");
+    console.log("Request #" + requestsMade);
+    console.log(req.body);
+    requestsMade++
+  }
   next();
 })
 
@@ -115,26 +118,19 @@ app.use(session({
 }));
 
 
-app.get('/ses', async (req, res) => {
-  // const um = new UserModel({email:"k120", "password": "ddd", entries:[]})
-  console.log("----session-----")
-  // console.log(req.headers.cookie)
-  console.log(req.session.id)
-  // console.log(session)
-  console.log("----------------")
-  req.session.visited = true;
-  res.json(session)
-});
+app.use(passport.initialize());
+app.use(passport.session())
 
 //routes
 app.get('/', async (req, res) => {
-  // const um = new UserModel({email:"k120", "password": "ddd", entries:[]})
-  console.log("----session-----")
-  // console.log(req.headers.cookie)
-  console.log(req.session.id)
-  console.log("----------------")
-  req.session.visited = true;
-  res.render('index', {title:"Basic Authentication REST API"}); 
+  console.log("INSIDE / \r\r\r\r\r")
+  let user = req.session.user
+
+  if (!user) {
+    res.render("login")
+  } else {
+    res.render("index", {username: user.email})
+  }
 });
 
 app.post("/signup", async (req, res)=>{
@@ -157,32 +153,10 @@ app.post("/signup", async (req, res)=>{
   })
 });
 
-app.post("/login", async (req, res)=>{
-  UserModel.findOne({email: req.body.email}).then((data)=>{
-    if(data){
-      bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(req.body.password,10, async function(err, hash) {
-            let user = await UserModel.findOne({email: req.body.email});
-            bcrypt.compare(req.body.password, user.password, function(err, result) {
-              console.log("password: " + req.body.password);
-              console.log("password hash: " + user.password);
-              console.log("password hashed: " + hash);
-              console.log(result);
-              if(result){
-                //don't return password 
-                req.session.user = user;
-                res.json({...user, success:1, message:"Login Successful"});
-              } else {
-                return res.status(401).json({"success": -1, message:"Login failed"})
-              }
-          });
-        });
-      });
-
-    } else {
-      res.status(401).json({"success": -1, message:"User does not exist"})
-    }
-  })
+app.post("/login", passport.authenticate('local'), async (req, res)=>{
+  req.session.user = req.user;
+  console.log(`user login: ${req.user}`);
+  res.json(req.user);
 });
 
 app.post("/entries", async (req, res)=>{
@@ -221,16 +195,12 @@ app.post("/entries", async (req, res)=>{
       user.save();
     } 
   } 
-
-
   res.send(payload);
-
 });
 
 
-app.get("/status", (request, response)=>{
-  console.log(request.sessionStore)
-  response.send(request.session.user || "not authenticated")
+app.get("/auth-status", (request, response)=>{
+  return response.send(request.user || "not authenticated")
 })
 
 // Start the server
